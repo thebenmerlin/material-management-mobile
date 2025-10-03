@@ -85,34 +85,35 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   const hasRole = (role: string | string[]): boolean => {
-    if (!user) return false;
-    const roles = Array.isArray(role) ? role : [role];
-    return roles.includes(user.role);
+  if (!user) return false;
+  const roles = Array.isArray(role) ? role : [role];
+  return roles.includes(user.role);
+};
+
+const hasPermission = (permission: string): boolean => {
+  if (!user) return false;
+  
+  // Define role-based permissions
+  const permissions: Record<string, string[]> = {
+    'Director': ['*'], // All permissions
+    'Purchase Team': [
+      'approve_indents',
+      'create_orders', 
+      'view_reports',
+      'view_all_sites'
+    ],
+    'Site Engineer': [
+      'create_indents',
+      'view_own_indents',
+      'mark_received',
+      'upload_receipts'
+    ],
   };
 
-  const hasPermission = (permission: string): boolean => {
-    if (!user) return false;
+  const userPermissions = permissions[user.role] || [];
+  return userPermissions.includes('*') || userPermissions.includes(permission);
+};
 
-    // Define role-based permissions
-    const permissions: Record<string, string[]> = {
-      DIRECTOR: ['*'], // All permissions
-      PURCHASE_TEAM: [
-        'approve_indents',
-        'create_orders', 
-        'view_reports',
-        'view_all_sites'
-      ],
-      SITE_ENGINEER: [
-        'create_indents',
-        'view_own_indents',
-        'mark_received',
-        'upload_receipts'
-      ],
-    };
-
-    const userPermissions = permissions[user.role] || [];
-    return userPermissions.includes('*') || userPermissions.includes(permission);
-  };
 
   const value = {
     user,
