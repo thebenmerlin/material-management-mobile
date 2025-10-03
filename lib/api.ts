@@ -150,6 +150,19 @@ export const materialsApi = {
     return response.data || [];
   }
 };
+// Helper function to map siteId to siteName
+function getSiteName(siteId: string | null | undefined): string {
+  if (!siteId) return 'Unknown Site';
+  
+  const siteMap: Record<string, string> = {
+    'site-chembur': 'Chembur Site',
+    'site-bandra': 'Bandra Site',
+    'site-mumbai': 'Mumbai Central Site',
+    'head-office': 'Head Office'
+  };
+  
+  return siteMap[siteId] || 'Unknown Site';
+},
 
 // Indents API
 export const indentsApi = {
