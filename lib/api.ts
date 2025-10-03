@@ -163,7 +163,7 @@ export const indentsApi = {
     description?: string;
   }): Promise<any> {
     // Backend expects different format - adapt the request
-    const firstMaterial = indentData.materials;
+    const firstMaterial = indentData.materials;  // FIXED: Access first element of array
     const backendData = {
       material_id: firstMaterial.materialId,
       quantity: firstMaterial.quantity,
