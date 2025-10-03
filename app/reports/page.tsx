@@ -57,7 +57,7 @@ export default function ReportsPage() {
 
   useEffect(() => {
     // Redirect if not authorized
-    if (user && !hasRole(['PURCHASE_TEAM', 'DIRECTOR'])) {
+    if (user && !hasRole(['Purchase Team', 'Director'])) {
       window.location.href = '/dashboard';
       return;
     }
@@ -69,7 +69,7 @@ export default function ReportsPage() {
   }, [user, hasRole]);
 
   useEffect(() => {
-    if (selectedMonth && selectedYear && hasRole(['PURCHASE_TEAM', 'DIRECTOR'])) {
+    if (selectedMonth && selectedYear && hasRole(['Purchase Team', 'Director'])) {
       loadReport();
     }
   }, [selectedMonth, selectedYear, hasRole]);
@@ -127,7 +127,7 @@ export default function ReportsPage() {
   const currentYear = new Date().getFullYear();
   const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
-  if (!hasRole(['PURCHASE_TEAM', 'DIRECTOR'])) {
+  if (!hasRole(['Purchase Team', 'Director'])) {
     return null;
   }
 
