@@ -39,7 +39,7 @@ export default function OrdersPage() {
 
   useEffect(() => {
     // Redirect if not authorized
-    if (user && !hasRole(['PURCHASE_TEAM', 'DIRECTOR'])) {
+    if (user && !hasRole(['Purchase Team', 'Director'])) {
       window.location.href = '/dashboard';
       return;
     }
@@ -57,7 +57,7 @@ export default function OrdersPage() {
       }
     };
 
-    if (user && hasRole(['PURCHASE_TEAM', 'DIRECTOR'])) {
+    if (user && hasRole(['Purchase Team', 'Director'])) {
       loadOrders();
     }
   }, [user, hasRole]);
@@ -72,7 +72,7 @@ export default function OrdersPage() {
     }
   };
 
-  if (!hasRole(['PURCHASE_TEAM', 'DIRECTOR'])) {
+  if (!hasRole(['Purchase Team', 'Director'])) {
     return null;
   }
 
