@@ -116,9 +116,9 @@ export default function LoginPage() {
                 Demo credentials available for testing
               </p>
               <div className="mt-2 text-xs text-gray-500 space-y-1">
-                <p>Engineer: engineer@example.com / password123</p>
-                <p>Purchase: purchase@example.com / password123</p>
-                <p>Director: director@example.com / password123</p>
+                <p>Engineer: engineer1@company.com / password123</p>
+                <p>Purchase: purchase1@company.com / password123</p>
+                <p>Director: director1@company.com / password123</p>
               </div>
             </div>
           </CardContent>
