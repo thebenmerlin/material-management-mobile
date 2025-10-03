@@ -32,6 +32,9 @@ interface Indent {
   siteName?: string;
   totalItems: number;
   description?: string;
+  material_name?: string;     // Add backend field
+  siteId?: string;           // Add backend field
+  quantity?: number;         // Add backend field
 }
 
 export default function IndentsPage() {
@@ -196,15 +199,15 @@ export default function IndentsPage() {
                           <p className="text-sm text-gray-600">
                             {indent.createdAt ? formatDate(indent.createdAt) : 'Unknown Date'}
                           </p>
-                          {indent.siteName && (
-                            <p className="text-sm text-gray-500">
+                          {indent.siteName && indent.siteName !== 'Unknown Site' && 
+                            <p className="text-xs text-gray-500">
                               Site: {indent.siteName}
                             </p>
                           )}
                         </div>
                         <Badge className={getStatusColor(indent.status)}>
                           {getStatusIcon(indent.status)}
-                          <span className="ml-1">{indent.status}</span>
+                          <span className="ml-1">{indent.status || 'Unknown'}</span>
                         </Badge>
                       </div>
 
