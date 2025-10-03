@@ -48,7 +48,7 @@ export default function DashboardPage() {
       try {
         setLoading(true);
         const data = await reportsApi.getDashboardStats(
-          hasRole('SITE_ENGINEER') ? user?.siteId : undefined
+          hasRole('Site Engineer') ? user?.siteId : undefined
         );
         setStats(data);
       } catch (error: any) {
@@ -122,9 +122,9 @@ export default function DashboardPage() {
             Welcome back, {user?.name}!
           </h2>
           <p className="text-gray-600">
-            {hasRole('DIRECTOR') && 'Manage all operations across sites'}
-            {hasRole('PURCHASE_TEAM') && 'Handle approvals and orders'}
-            {hasRole('SITE_ENGINEER') && `Managing ${user?.siteName || 'your site'}`}
+            {hasRole('Director') && 'Manage all operations across sites'}
+            {hasRole('Purchase Team') && 'Handle approvals and orders'}
+            {hasRole('Site Engineer') && `Managing ${user?.siteName || 'your site'}`}
           </p>
         </motion.div>
 
@@ -160,7 +160,7 @@ export default function DashboardPage() {
         </div>
 
         {/* Charts Section */}
-        {(hasRole('PURCHASE_TEAM') || hasRole('DIRECTOR')) && stats?.chartData && (
+        {(hasRole('Purchase Team') || hasRole('Director')) && stats?.chartData && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -290,7 +290,7 @@ export default function DashboardPage() {
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-2 gap-3">
-                {hasRole('SITE_ENGINEER') && (
+                {hasRole('Site Engineer') && (
                   <Button variant="outline" className="h-auto p-4" asChild>
                     <Link href="/indents/create" className="flex flex-col items-center space-y-2">
                       <FileText className="h-6 w-6" />
@@ -299,7 +299,7 @@ export default function DashboardPage() {
                   </Button>
                 )}
 
-                {(hasRole('PURCHASE_TEAM') || hasRole('DIRECTOR')) && (
+                {(hasRole('Purchase Team') || hasRole('Director')) && (
                   <Button variant="outline" className="h-auto p-4" asChild>
                     <Link href="/indents?filter=pending" className="flex flex-col items-center space-y-2">
                       <Clock className="h-6 w-6" />
@@ -308,7 +308,7 @@ export default function DashboardPage() {
                   </Button>
                 )}
 
-                {hasRole('PURCHASE_TEAM') && (
+                {hasRole('Purchase Team') && (
                   <Button variant="outline" className="h-auto p-4" asChild>
                     <Link href="/orders/create" className="flex flex-col items-center space-y-2">
                       <Package className="h-6 w-6" />
@@ -317,7 +317,7 @@ export default function DashboardPage() {
                   </Button>
                 )}
 
-                {(hasRole('PURCHASE_TEAM') || hasRole('DIRECTOR')) && (
+                {(hasRole('Purchase Team') || hasRole('Director')) && (
                   <Button variant="outline" className="h-auto p-4" asChild>
                     <Link href="/reports" className="flex flex-col items-center space-y-2">
                       <TrendingUp className="h-6 w-6" />
