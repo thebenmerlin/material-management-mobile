@@ -36,19 +36,19 @@ const navItems: NavItem[] = [
     href: '/orders',
     label: 'Orders',
     icon: ShoppingCart,
-    roles: ['PURCHASE_TEAM', 'DIRECTOR'],
+    roles: ['Purchase Team', 'Director'],
   },
   {
     href: '/reports',
     label: 'Reports',
     icon: BarChart3,
-    roles: ['PURCHASE_TEAM', 'DIRECTOR'],
+    roles: ['Purchase Team', 'Director'],
   },
   {
     href: '/upload',
     label: 'Upload',
     icon: Upload,
-    roles: ['SITE_ENGINEER'],
+    roles: ['Site Engineer'],
   },
   {
     href: '/settings',
