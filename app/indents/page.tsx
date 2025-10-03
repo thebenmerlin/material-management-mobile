@@ -32,16 +32,16 @@ interface Indent {
   siteName?: string;
   totalItems: number;
   description?: string;
-  material_name?: string;     // Add backend field
-  siteId?: string;           // Add backend field
-  quantity?: number;         // Add backend field
+  material_name?: string;
+  siteId?: string;
+  quantity?: number;
 }
 
 export default function IndentsPage() {
   const { user, hasRole } = useAuth();
   const [indents, setIndents] = useState<Indent[]>([]);
   const [loading, setLoading] = useState(true);
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [statusFilter, setStatusFilter] = useState('all');
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
 
@@ -62,13 +62,11 @@ export default function IndentsPage() {
       }
 
       const response = await indentsApi.getIndents(filters);
-
       if (pageNum === 1) {
         setIndents(response.indents || []);
       } else {
         setIndents(prev => [...prev, ...(response.indents || [])]);
       }
-
       setHasMore(response.indents.length === 10);
     } catch (error: any) {
       toast.error('Failed to load indents');
@@ -111,23 +109,23 @@ export default function IndentsPage() {
       case 'approved': return <CheckCircle className="h-4 w-4" />;
       case 'rejected': return <X className="h-4 w-4" />;
       case 'ordered': return <Package className="h-4 w-4" />;
-      default: return <FileText className="h-4 w-4" />;
+      default: return <AlertTriangle className="h-4 w-4" />;
     }
   };
 
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
+      
       <main className="mobile-safe-area p-4 space-y-6">
         {/* Header */}
-        <div className="flex items-center justify-between">
+        <div className="flex justify-between items-center">
           <h1 className="text-2xl font-bold text-gray-900">Indents</h1>
           {hasRole('Site Engineer') && (
             <Button asChild>
               <Link href="/indents/create">
                 <Plus className="h-4 w-4 mr-2" />
-                Create
+                Create Indent
               </Link>
             </Button>
           )}
@@ -137,9 +135,9 @@ export default function IndentsPage() {
         <Card>
           <CardContent className="p-4">
             <div className="flex items-center space-x-4">
-              <Filter className="h-5 w-5 text-gray-500" />
+              <Filter className="h-4 w-4 text-gray-500" />
               <Select value={statusFilter} onValueChange={handleStatusChange}>
-                <SelectTrigger className="w-40">
+                <SelectTrigger className="w-48">
                   <SelectValue placeholder="Filter by status" />
                 </SelectTrigger>
                 <SelectContent>
@@ -157,8 +155,8 @@ export default function IndentsPage() {
 
         {/* Indents List */}
         {loading && indents.length === 0 ? (
-          <div className="flex items-center justify-center py-20">
-            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+          <div className="text-center py-8">
+            <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary mx-auto"></div>
           </div>
         ) : indents.length === 0 ? (
           <Card>
@@ -189,73 +187,63 @@ export default function IndentsPage() {
               >
                 <Card>
                   <CardContent className="p-4">
-                    <div className="space-y-3">
-                      {/* Header */}
-                      <div className="flex items-start justify-between">
-                        <div>
-                          <h3 className="font-semibold text-gray-900">
-                            Indent #{indent.id.slice(-6)}
-                          </h3>
-                          <p className="text-sm text-gray-600">
-                            {indent.createdAt ? formatDate(indent.createdAt) : 'Unknown Date'}
-                          </p>
-                          {indent.siteName && indent.siteName !== 'Unknown Site' && 
-                            <p className="text-xs text-gray-500">
-                              Site: {indent.siteName}
-                            </p>
-                          )}
-                        </div>
-                        <Badge className={getStatusColor(indent.status)}>
-                          {getStatusIcon(indent.status)}
-                          <span className="ml-1">{indent.status || 'Unknown'}</span>
-                        </Badge>
-                      </div>
-
-                      {/* Materials Summary */}
-                      <div className="bg-gray-50 rounded-lg p-3">
-                        <p className="text-sm font-medium text-gray-900">
-                          {indent.totalItems || 0} items requested
+                    {/* Header */}
+                    <div className="flex justify-between items-start mb-3">
+                      <div>
+                        <h3 className="font-semibold text-gray-900">
+                          Indent #{indent.id.toString().slice(-6)}
+                        </h3>
+                        <p className="text-xs text-gray-500">
+                          {indent.createdAt ? formatDate(indent.createdAt) : 'Unknown Date'}
                         </p>
-                        {indent.description && (
-                          <p className="text-sm text-gray-600 mt-1">
-                            {indent.description}
+                        {indent.siteName && indent.siteName !== 'Unknown Site' && (
+                          <p className="text-xs text-gray-500">
+                            Site: {indent.siteName}
                           </p>
                         )}
                       </div>
+                      <Badge className={getStatusColor(indent.status || 'Unknown')}>
+                        {getStatusIcon(indent.status || 'Unknown')}
+                        {indent.status || 'Unknown'}
+                      </Badge>
+                    </div>
 
-                      {/* Actions */}
-                      <div className="flex space-x-2">
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          asChild
-                          className="flex-1"
-                        >
-                          <Link href={`/indents/${indent.id}`}>
-                            View Details
-                          </Link>
-                        </Button>
+                    {/* Materials Summary */}
+                    <div className="mb-3">
+                      <p className="text-sm text-gray-600">
+                        {indent.totalItems || 0} items requested
+                      </p>
+                      {indent.description && (
+                        <p className="text-xs text-gray-500 mt-1">
+                          {indent.description}
+                        </p>
+                      )}
+                    </div>
 
-                        {(hasRole('Purchase Team') || hasRole('Director')) && 
-                         indent.status === 'PENDING' && (
-                          <>
-                            <Button
-                              size="sm"
-                              onClick={() => handleApproval(indent.id, true)}
-                              className="bg-green-600 hover:bg-green-700"
-                            >
-                              Approve
-                            </Button>
-                            <Button
-                              size="sm"
-                              variant="destructive"
-                              onClick={() => handleApproval(indent.id, false)}
-                            >
-                              Reject
-                            </Button>
-                          </>
-                        )}
-                      </div>
+                    {/* Actions */}
+                    <div className="flex justify-between items-center">
+                      <Button variant="outline" size="sm" asChild>
+                        <Link href={`/indents/${indent.id}`}>View Details</Link>
+                      </Button>
+                      
+                      {(hasRole('Purchase Team') || hasRole('Director')) && 
+                       (indent.status || '').toLowerCase() === 'pending' && (
+                        <>
+                          <Button 
+                            size="sm" 
+                            onClick={() => handleApproval(indent.id, true)}
+                          >
+                            Approve
+                          </Button>
+                          <Button 
+                            variant="destructive" 
+                            size="sm"
+                            onClick={() => handleApproval(indent.id, false)}
+                          >
+                            Reject
+                          </Button>
+                        </>
+                      )}
                     </div>
                   </CardContent>
                 </Card>
@@ -273,7 +261,7 @@ export default function IndentsPage() {
           </div>
         )}
       </main>
-
+      
       <MobileNav />
     </div>
   );
