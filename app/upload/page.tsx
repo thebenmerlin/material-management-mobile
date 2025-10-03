@@ -43,7 +43,7 @@ export default function UploadPage() {
       }
     };
 
-    if (user && hasRole('SITE_ENGINEER')) {
+    if (user && hasRole('Site Engineer')) {
       loadIndents();
     }
   });
@@ -92,7 +92,7 @@ export default function UploadPage() {
     }
   };
 
-  if (!hasRole('SITE_ENGINEER')) {
+  if (!hasRole('Site Engineer')) {
     return (
       <div className="min-h-screen bg-gray-50">
         <Header />
