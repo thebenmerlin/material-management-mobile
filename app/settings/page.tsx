@@ -25,7 +25,7 @@ export default function SettingsPage() {
   return (
     <div className="min-h-screen bg-gray-50">
       <Header />
-
+      
       <main className="mobile-safe-area p-4 space-y-6">
         <div className="text-center">
           <h1 className="text-2xl font-bold text-gray-900 mb-2">Settings</h1>
@@ -109,7 +109,7 @@ export default function SettingsPage() {
             </CardHeader>
             <CardContent>
               <div className="space-y-3">
-                {user.role === 'SITE_ENGINEER' && (
+                {user.role === 'Site Engineer' && (
                   <>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Create Indents</span>
@@ -125,8 +125,8 @@ export default function SettingsPage() {
                     </div>
                   </>
                 )}
-
-                {user.role === 'PURCHASE_TEAM' && (
+                
+                {user.role === 'Purchase Team' && (
                   <>
                     <div className="flex justify-between items-center">
                       <span className="text-sm text-gray-600">Approve Indents</span>
@@ -142,8 +142,8 @@ export default function SettingsPage() {
                     </div>
                   </>
                 )}
-
-                {user.role === 'DIRECTOR' && (
+                
+                {user.role === 'Director' && (
                   <div className="flex justify-between items-center">
                     <span className="text-sm text-gray-600">Full Access</span>
                     <Badge variant="outline" className="text-green-600">All Permissions</Badge>
@@ -206,7 +206,7 @@ export default function SettingsPage() {
                 Your session is secured with industry-standard encryption. 
                 Always log out when using shared devices.
               </p>
-
+              
               <Button
                 variant="destructive"
                 onClick={logout}
@@ -238,7 +238,7 @@ export default function SettingsPage() {
           </Card>
         </motion.div>
       </main>
-
+      
       <MobileNav />
     </div>
   );
