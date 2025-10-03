@@ -62,6 +62,20 @@ export const setStoredUser = (user: User): void => {
   }
 };
 
+// Helper function to map siteId to siteName
+function getSiteName(siteId: string | null | undefined): string {
+  if (!siteId) return 'Unknown Site';
+  
+  const siteMap: Record<string, string> = {
+    'site-chembur': 'Chembur Site',
+    'site-bandra': 'Bandra Site',
+    'site-mumbai': 'Mumbai Central Site',
+    'head-office': 'Head Office'
+  };
+  
+  return siteMap[siteId] || 'Unknown Site';
+}
+
 // Base fetch function with auth
 const apiFetch = async (
   endpoint: string,
@@ -106,9 +120,7 @@ export const authApi = {
     const userData = {
       ...response.data.user,
       name: response.data.user.username || response.data.user.email,
-      siteName: response.data.user.siteId === 'site-chembur' ? 'Chembur Site' : 
-               response.data.user.siteId === 'site-bandra' ? 'Bandra Site' : 
-               response.data.user.siteId === 'head-office' ? 'Head Office' : 'Site'
+      siteName: getSiteName(response.data.user.siteId)
     };
     
     setAuthToken(response.data.token);
@@ -130,9 +142,7 @@ export const authApi = {
     const userData = {
       ...response.data,
       name: response.data.username || response.data.email,
-      siteName: response.data.siteId === 'site-chembur' ? 'Chembur Site' : 
-               response.data.siteId === 'site-bandra' ? 'Bandra Site' : 
-               response.data.siteId === 'head-office' ? 'Head Office' : 'Site'
+      siteName: getSiteName(response.data.siteId)
     };
     return userData;
   }
@@ -150,19 +160,6 @@ export const materialsApi = {
     return response.data || [];
   }
 };
-// Helper function to map siteId to siteName
-function getSiteName(siteId: string | null | undefined): string {
-  if (!siteId) return 'Unknown Site';
-  
-  const siteMap: Record<string, string> = {
-    'site-chembur': 'Chembur Site',
-    'site-bandra': 'Bandra Site',
-    'site-mumbai': 'Mumbai Central Site',
-    'head-office': 'Head Office'
-  };
-  
-  return siteMap[siteId] || 'Unknown Site';
-},
 
 // Indents API
 export const indentsApi = {
@@ -176,7 +173,7 @@ export const indentsApi = {
     description?: string;
   }): Promise<any> {
     // Backend expects different format - adapt the request
-    const firstMaterial = indentData.materials[0]; // FIXED: Access first element of array
+    const firstMaterial = indentData.materials[0];
     const backendData = {
       material_id: firstMaterial.materialId,
       quantity: firstMaterial.quantity,
@@ -191,35 +188,35 @@ export const indentsApi = {
   },
 
   async getIndents(filters?: {
-  status?: string;
-  siteId?: string;
-  page?: number;
-  limit?: number;
-}): Promise<{ indents: any[]; total: number; page: number }> {
-  const response = await apiFetch('/indents');
-  
-  // Robust data transformation with null checks
-  const rawIndents = response.data || [];
-  const indents = rawIndents.map((indent: any) => {
-    // Ensure all required properties exist
+    status?: string;
+    siteId?: string;
+    page?: number;
+    limit?: number;
+  }): Promise<{ indents: any[]; total: number; page: number }> {
+    const response = await apiFetch('/indents');
+    
+    // Robust data transformation with null checks
+    const rawIndents = response.data || [];
+    const indents = rawIndents.map((indent: any) => {
+      // Ensure all required properties exist
+      return {
+        ...indent,
+        id: indent.id ? indent.id.toString() : Date.now().toString(),
+        materials: indent.material_name ? [{ name: indent.material_name }] : [],
+        totalItems: 1,
+        siteName: getSiteName(indent.siteId),
+        status: indent.status || 'Unknown',
+        createdAt: indent.createdAt || new Date().toISOString(),
+        description: indent.description || null
+      };
+    });
+    
     return {
-      ...indent,
-      id: indent.id ? indent.id.toString() : Date.now().toString(), // Convert to string
-      materials: indent.material_name ? [{ name: indent.material_name }] : [], // Safe array creation
-      totalItems: 1, // Hardcode to 1 since backend only returns 1 material per indent
-      siteName: getSiteName(indent.siteId), // Use helper function
-      status: indent.status || 'Unknown', // Fallback for null status
-      createdAt: indent.createdAt || new Date().toISOString(), // Fallback for null date
-      description: indent.description || null // Explicitly handle null
+      indents: indents,
+      total: indents.length,
+      page: parseInt(filters?.page?.toString() || '1')
     };
-  });
-  
-  return {
-    indents: indents,
-    total: indents.length,
-    page: parseInt(filters?.page?.toString() || '1')
-  };
-},
+  },
 
   async getIndentById(id: string): Promise<any> {
     const response = await apiFetch(`/indents/${id}`);
@@ -291,7 +288,7 @@ export const ordersApi = {
     const orders = (response.data || []).map((order: any) => ({
       ...order,
       materials: [],
-      totalValue: 50000 + Math.random() * 100000, // Mock value
+      totalValue: 50000 + Math.random() * 100000,
       vendorName: order.vendor_name
     }));
     
