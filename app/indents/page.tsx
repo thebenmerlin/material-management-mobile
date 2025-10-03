@@ -194,7 +194,7 @@ export default function IndentsPage() {
                             Indent #{indent.id.slice(-6)}
                           </h3>
                           <p className="text-sm text-gray-600">
-                            {formatDate(indent.createdAt)}
+                            {indent.createdAt ? formatDate(indent.createdAt) : 'Unknown Date'}
                           </p>
                           {indent.siteName && (
                             <p className="text-sm text-gray-500">
