@@ -178,30 +178,35 @@ export const indentsApi = {
   },
 
   async getIndents(filters?: {
-    status?: string;
-    siteId?: string;
-    page?: number;
-    limit?: number;
-  }): Promise<{ indents: any[]; total: number; page: number }> {
-    const response = await apiFetch('/indents');
-    
-    // Backend returns { success: true, data: rows }
-    // Frontend expects { indents: any[]; total: number; page: number }
-    const indents = (response.data || []).map((indent: any) => ({
-      ...indent,
-      materials: [{ name: indent.material_name }],
-      totalItems: 1,
-      siteName: indent.siteId === 'site-chembur' ? 'Chembur Site' : 
-               indent.siteId === 'site-bandra' ? 'Bandra Site' : 
-               indent.siteId === 'head-office' ? 'Head Office' : 'Site'
-    }));
-    
+  status?: string;
+  siteId?: string;
+  page?: number;
+  limit?: number;
+}): Promise<{ indents: any[]; total: number; page: number }> {
+  const response = await apiFetch('/indents');
+  
+  // Robust data transformation with null checks
+  const rawIndents = response.data || [];
+  const indents = rawIndents.map((indent: any) => {
+    // Ensure all required properties exist
     return {
-      indents: indents,
-      total: indents.length,
-      page: parseInt(filters?.page?.toString() || '1')
+      ...indent,
+      id: indent.id ? indent.id.toString() : Date.now().toString(), // Convert to string
+      materials: indent.material_name ? [{ name: indent.material_name }] : [], // Safe array creation
+      totalItems: 1, // Hardcode to 1 since backend only returns 1 material per indent
+      siteName: getSiteName(indent.siteId), // Use helper function
+      status: indent.status || 'Unknown', // Fallback for null status
+      createdAt: indent.createdAt || new Date().toISOString(), // Fallback for null date
+      description: indent.description || null // Explicitly handle null
     };
-  },
+  });
+  
+  return {
+    indents: indents,
+    total: indents.length,
+    page: parseInt(filters?.page?.toString() || '1')
+  };
+},
 
   async getIndentById(id: string): Promise<any> {
     const response = await apiFetch(`/indents/${id}`);
