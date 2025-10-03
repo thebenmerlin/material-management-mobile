@@ -211,7 +211,7 @@ export default function IndentsPage() {
                       {/* Materials Summary */}
                       <div className="bg-gray-50 rounded-lg p-3">
                         <p className="text-sm font-medium text-gray-900">
-                          {indent.totalItems} items requested
+                          {indent.totalItems || 0} items requested
                         </p>
                         {indent.description && (
                           <p className="text-sm text-gray-600 mt-1">
