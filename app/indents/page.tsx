@@ -54,7 +54,7 @@ export default function IndentsPage() {
         filters.status = status.toUpperCase();
       }
 
-      if (hasRole('SITE_ENGINEER') && user?.siteId) {
+      if (hasRole('Site Engineer') && user?.siteId) {
         filters.siteId = user.siteId;
       }
 
@@ -120,7 +120,7 @@ export default function IndentsPage() {
         {/* Header */}
         <div className="flex items-center justify-between">
           <h1 className="text-2xl font-bold text-gray-900">Indents</h1>
-          {hasRole('SITE_ENGINEER') && (
+          {hasRole('Site Engineer') && (
             <Button asChild>
               <Link href="/indents/create">
                 <Plus className="h-4 w-4 mr-2" />
@@ -163,12 +163,12 @@ export default function IndentsPage() {
               <FileText className="h-12 w-12 text-gray-400 mx-auto mb-4" />
               <h3 className="text-lg font-medium text-gray-900 mb-2">No indents found</h3>
               <p className="text-gray-600 mb-4">
-                {hasRole('SITE_ENGINEER') 
+                {hasRole('Site Engineer') 
                   ? 'Create your first indent to get started.'
                   : 'No indents match your current filter.'
                 }
               </p>
-              {hasRole('SITE_ENGINEER') && (
+              {hasRole('Site Engineer') && (
                 <Button asChild>
                   <Link href="/indents/create">Create Indent</Link>
                 </Button>
@@ -233,7 +233,7 @@ export default function IndentsPage() {
                           </Link>
                         </Button>
 
-                        {(hasRole('PURCHASE_TEAM') || hasRole('DIRECTOR')) && 
+                        {(hasRole('Purchase Team') || hasRole('Director')) && 
                          indent.status === 'PENDING' && (
                           <>
                             <Button
