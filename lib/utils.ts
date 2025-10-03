@@ -39,11 +39,11 @@ export function getStatusColor(status: string): string {
 
 export function getRoleDisplayName(role: string): string {
   const roleNames: Record<string, string> = {
-    'SITE_ENGINEER': 'Site Engineer',
-    'PURCHASE_TEAM': 'Purchase Team',
-    'DIRECTOR': 'Director',
+    'Site Engineer': 'Site Engineer',
+    'Purchase Team': 'Purchase Team', 
+    'Director': 'Director',
   };
-
+  
   return roleNames[role] || role;
 }
 
@@ -78,3 +78,6 @@ export function truncateText(text: string, maxLength: number = 100): string {
   if (text.length <= maxLength) return text;
   return text.substr(0, maxLength) + '...';
 }
+
+
+
