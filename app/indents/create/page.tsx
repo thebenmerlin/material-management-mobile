@@ -60,7 +60,7 @@ export default function CreateIndentPage() {
 
   // Redirect if not authorized
   useEffect(() => {
-    if (user && !hasRole('SITE_ENGINEER')) {
+    if (user && !hasRole('Site Engineer')) {
       router.push('/indents');
     }
   }, [user, hasRole, router]);
@@ -80,7 +80,7 @@ export default function CreateIndentPage() {
         setSites(sitesData);
 
         // Set default site for site engineers
-        if (hasRole('SITE_ENGINEER') && user?.siteId) {
+        if (hasRole('Site Engineer') && user?.siteId) {
           setSelectedSite(user.siteId);
         }
       } catch (error: any) {
@@ -183,7 +183,7 @@ export default function CreateIndentPage() {
     }
   };
 
-  if (!hasRole('SITE_ENGINEER')) {
+  if (!hasRole('Site Engineer')) {
     return null;
   }
 
@@ -205,7 +205,7 @@ export default function CreateIndentPage() {
         </div>
 
         {/* Site Selection */}
-        {!hasRole('SITE_ENGINEER') && (
+        {!hasRole('Site Engineer') && (
           <Card>
             <CardHeader>
               <CardTitle>Site Information</CardTitle>
